@@ -1,11 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ProductoService } from './producto.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('producto')
 export class ProductoController {
-  constructor(private readonly productoService: ProductoService) {}
+  constructor(private readonly productoService: ProductoService) { }
 
   @Post()
   create(@Body() createProductoDto: CreateProductoDto) {
@@ -13,13 +14,15 @@ export class ProductoController {
   }
 
   @Get()
-  findAll() {
-    return this.productoService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    console.log(paginationDto);
+
+    return this.productoService.findAll(paginationDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productoService.findOne(+id);
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.productoService.findOne(id);
   }
 
   @Patch(':id')
@@ -28,7 +31,7 @@ export class ProductoController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productoService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.productoService.remove(id);
   }
 }
