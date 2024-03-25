@@ -20,14 +20,16 @@ export class ProductoController {
     return this.productoService.findAll(paginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.productoService.findOne(id);
+  @Get(':term')
+  findOne(@Param('term',) term: string) {
+    return this.productoService.findOnePlain(term);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductoDto: UpdateProductoDto) {
-    return this.productoService.update(+id, updateProductoDto);
+  update(@Param('id', ParseUUIDPipe) id: string,
+    @Body() updateProductoDto: UpdateProductoDto
+  ) {
+    return this.productoService.update(id, updateProductoDto);
   }
 
   @Delete(':id')
